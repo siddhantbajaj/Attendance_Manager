@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.siddhant.attendancemanager.Class.subject;
@@ -22,17 +25,29 @@ import java.util.TimerTask;
  * Created by ABC on 31-08-2016.
  */
 public class Adapter_subjectStat extends RecyclerView.Adapter<Adapter_subjectStat.ourHolder> {
-    ArrayList<subject>marr;
+
+    ArrayList<subject> subjectsStatList;
     Context mcontext;
 
     public Adapter_subjectStat(ArrayList<subject> marr, Context mcontext) {
-        this.marr = marr;
+        this.subjectsStatList = marr;
         this.mcontext = mcontext;
     }
 
     @Override
     public Adapter_subjectStat.ourHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(mcontext).inflate(R.layout.subject,parent,false);
+
+        //Adjusting size of subject card wrt to screen size
+        DisplayMetrics displaymetrics ;
+        displaymetrics = mcontext.getApplicationContext().getResources().getDisplayMetrics();
+        int height = displaymetrics.heightPixels;
+        int customHeight = height*5/7 ;
+        v.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,customHeight));
+        //Adjusting margins of subject card
+        LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+        buttonLayoutParams.setMargins(0, 10, 0, 0);
+        v.setLayoutParams(buttonLayoutParams);
 
         return new ourHolder(v);
 
@@ -41,24 +56,24 @@ public class Adapter_subjectStat extends RecyclerView.Adapter<Adapter_subjectSta
     @Override
     public void onBindViewHolder(final Adapter_subjectStat.ourHolder holder, int position) {
         int max=30;
-        int classes_left=marr.get(position).getLeft_classes();
-       int total=marr.get(position).getTotal_classes();
-        int bunks=marr.get(position).getBunks_available();
-        int attended=marr.get(position).getClasses_attended();
+        int classes_left=subjectsStatList.get(position).getLeft_classes();
+        int total=subjectsStatList.get(position).getTotal_classes();
+        int bunks=subjectsStatList.get(position).getBunks_available();
+        int attended=subjectsStatList.get(position).getClasses_attended();
+        int percentage=subjectsStatList.get(position).getPercentage();
 
-        int percentage=marr.get(position).getPercentage();
-        holder.subjectName.setText(marr.get(position).getName());
+        holder.subjectName.setText(subjectsStatList.get(position).getName());
         if(percentage<75){
-            holder.dp.setFinishedStrokeColor(Color.rgb(255,0,0));
+            holder.dp_percentage.setFinishedStrokeColor(Color.rgb(255,0,0));
 
         }
         else {
-            holder.dp.setFinishedStrokeColor(Color.rgb(0,255,0));
+            holder.dp_percentage.setFinishedStrokeColor(Color.rgb(0,255,0));
         }
-        Animation_for_circularProgress(holder.dp,percentage);
-        Animation_for_circularProgress(holder.dp1,bunks);
-        Animation_for_circularProgress(holder.dp2,attended);
-        Animation_for_circularProgress(holder.dp3,classes_left);
+        Animation_for_circularProgress(holder.dp_percentage,percentage);
+        Animation_for_circularProgress(holder.dp_bunks,bunks);
+        Animation_for_circularProgress(holder.dp_attended,attended);
+        Animation_for_circularProgress(holder.dp_classesLeft,classes_left);
 
 
     }
@@ -85,23 +100,23 @@ public class Adapter_subjectStat extends RecyclerView.Adapter<Adapter_subjectSta
 
     @Override
     public int getItemCount() {
-        return marr.size();
+        return subjectsStatList.size();
     }
     public class ourHolder extends  RecyclerView.ViewHolder{
         TextView subjectName;
-        DonutProgress dp;
-        DonutProgress dp1;
-        DonutProgress dp2;
-        DonutProgress dp3;
+        DonutProgress dp_percentage;
+        DonutProgress dp_bunks;
+        DonutProgress dp_attended;
+        DonutProgress dp_classesLeft;
 
 
         public ourHolder(View itemView) {
             super(itemView);
             subjectName=(TextView)itemView.findViewById(R.id.subject_name);
-            dp=(DonutProgress) itemView.findViewById(R.id.donut_progress);
-            dp1=(DonutProgress) itemView.findViewById(R.id.donut_progress1);
-            dp2=(DonutProgress) itemView.findViewById(R.id.donut_progress2);
-            dp3=(DonutProgress) itemView.findViewById(R.id.donut_progress3);
+            dp_percentage=(DonutProgress) itemView.findViewById(R.id.donut_progress);
+            dp_bunks=(DonutProgress) itemView.findViewById(R.id.donut_progress1);
+            dp_attended=(DonutProgress) itemView.findViewById(R.id.donut_progress2);
+            dp_classesLeft=(DonutProgress) itemView.findViewById(R.id.donut_progress3);
 
         }
     }

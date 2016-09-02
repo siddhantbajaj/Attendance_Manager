@@ -26,10 +26,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Fragment_stat test=new Fragment_stat();
-        FragmentManager fm=getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.frame,test).commit();
-        fm.executePendingTransactions();
+
+        //calling fragment_stat for now
+        callFragmentStat();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -105,5 +104,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void callFragmentStat(){
+        Fragment_stat test=new Fragment_stat();
+        FragmentManager fm=getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.frame,test).commit();
+        fm.executePendingTransactions();
     }
 }
